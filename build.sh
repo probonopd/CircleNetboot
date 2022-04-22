@@ -14,21 +14,6 @@ else
     export TOOLCHAIN_PREFIX="arm-none-eabi-"
 fi
 
-# Build additional libraries
-cd libs/circle/addon/display/
-make clean || true
-make -j
-cd ../sensor/
-make clean || true
-make -j
-cd ../Properties/
-make clean || true
-make -j
-cd ../../../..
-
-cd ..
-
-# Build MiniDexed
 cd circle/sample/38-bootloader
 make clean || true
 make -j
