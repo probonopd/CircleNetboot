@@ -16,10 +16,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Recursively pull git submodules
+    - name: Git pull
       run: |
            set -ex
            git clone https://github.com/rsta2/circle/
+           sed -i -e 's|2048|20480|g' circle/include/circle/net/http.h
     - name: Install toolchains
       run: |
            set -ex
