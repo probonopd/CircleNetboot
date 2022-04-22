@@ -20,7 +20,7 @@ jobs:
       run: |
            set -ex
            git clone https://github.com/rsta2/circle/
-           sed -i -e 's|2048|20480|g' circle/include/circle/net/http.h
+           sed -i -e 's|#-DNDEBUG|-DKERNEL_MAX_SIZE=0x400000 #-DNDEBUG|g' circle/Rules.mk
     - name: Install toolchains
       run: |
            set -ex
