@@ -17,6 +17,8 @@ else
 fi
 
 cd circle/
+make mrproper || true
+./configure -r ${RPI} --prefix "${PREFIX}"
 ./makeall clean
 ./makeall
 cd ..
