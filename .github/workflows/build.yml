@@ -1,0 +1,81 @@
+name: Build
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  Build:
+
+    runs-on: ubuntu-20.04
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Recursively pull git submodules
+      run: |
+           set -ex
+           git clone https://github.com/rsta2/circle/
+    - name: Install toolchains
+      run: |
+           set -ex
+           wget -q https://developer.arm.com/-/media/Files/downloads/gnu-a/10.3-2021.07/binrel/gcc-arm-10.3-2021.07-x86_64-aarch64-none-elf.tar.xz
+           tar xf *-aarch64-none-elf.tar.xz
+           wget -q https://developer.arm.com/-/media/Files/downloads/gnu-a/10.3-2021.07/binrel/gcc-arm-10.3-2021.07-x86_64-arm-none-eabi.tar.xz
+           tar xf *-arm-none-eabi.tar.xz
+           mkdir -p kernels
+    - name: Build for Raspberry Pi 4
+      run: |
+           set -ex
+           export PATH=$(readlink -f ./gcc-*aarch64-none*/bin/):$PATH
+           RPI=4 bash -ex build.sh
+           cp ./circle/sample/38-bootloader/kernel*.img ./kernels/
+    - name: Build for Raspberry Pi 3
+      run: |
+           set -ex
+           export PATH=$(readlink -f ./gcc-*aarch64-none*/bin/):$PATH
+           RPI=3 bash -ex build.sh
+           cp ./circle/sample/38-bootloader/kernel*.img ./kernels/
+    - name: Build for Raspberry Pi 2
+      run: |
+           set -ex
+           export PATH=$(readlink -f ./gcc-*arm-none*/bin/):$PATH
+           RPI=2 bash -ex build.sh
+           cp ./circle/sample/38-bootloader/kernel*.img ./kernels/
+    - name: Build for Raspberry Pi 1
+      run: |
+           set -ex
+           export PATH=$(readlink -f ./gcc-*arm-none*/bin/):$PATH
+           RPI=1 bash -ex build.sh
+           cp ./circle/sample/38-bootloader/kernel*.img ./kernels/
+    - name: Get Raspberry Pi boot files
+      run: |
+           set -ex
+           export PATH=$(readlink -f ./gcc-*aarch64-none*/bin/):$PATH
+           cd ./circle/boot
+           make
+           make armstub64
+           cd -
+           mkdir -p sdcard
+           cp -r ./circle/boot/* sdcard
+           rm -rf sdcard/config*.txt sdcard/README sdcard/Makefile sdcard/armstub sdcard/COPYING.linux
+           # cp ./config.txt sdcard/
+           cd sdcard
+           cp ../kernels/* . || true
+           zip -r ../CircleNetboot_$GITHUB_RUN_NUMBER_$(date +%Y-%m-%d)-$(git rev-parse --short HEAD).zip *
+           echo "artifactName=CircleNetboo_$GITHUB_RUN_NUMBER_$(date +%Y-%m-%d)-$(git rev-parse --short HEAD).zip" >> $GITHUB_ENV
+    - uses: actions/upload-artifact@v3
+      with:
+        name: ${{ env.artifactName }} # Exported above
+        path: ./sdcard/*
+    - name: Upload to GitHub Releases (only when building from main branch)
+      if: ${{ github.ref == 'refs/heads/main' }}
+      run: |
+           set -ex
+           wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
+           bash ./upload.sh ./CircleNetboot*.zip
+           
