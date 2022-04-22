@@ -67,7 +67,7 @@ jobs:
            cd sdcard
            cp ../kernels/* . || true
            zip -r ../CircleNetboot_$GITHUB_RUN_NUMBER_$(date +%Y-%m-%d)-$(git rev-parse --short HEAD).zip *
-           echo "artifactName=CircleNetboo_$GITHUB_RUN_NUMBER_$(date +%Y-%m-%d)-$(git rev-parse --short HEAD).zip" >> $GITHUB_ENV
+           echo "artifactName=CircleNetboot_$GITHUB_RUN_NUMBER_$(date +%Y-%m-%d)-$(git rev-parse --short HEAD).zip" >> $GITHUB_ENV
     - uses: actions/upload-artifact@v3
       with:
         name: ${{ env.artifactName }} # Exported above
