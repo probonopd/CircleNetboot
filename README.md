@@ -11,6 +11,7 @@ Builds of https://github.com/rsta2/circle/tree/master/sample/38-bootloader. This
 * Boot
 * Go to `http://ip_address:8080/`
 * Enter a kernel image file to be uploaded (`kernel*.img`) and press the "Boot now!" button
+* Alternatively: `tftp -m binary xxx.xxx.xxx.xxx -c put kernel.img`
 
 ## Credits
 
