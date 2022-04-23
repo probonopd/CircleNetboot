@@ -13,6 +13,11 @@ Builds of https://github.com/rsta2/circle/tree/master/sample/38-bootloader. This
 * Enter a kernel image file to be uploaded (`kernel*.img`) and press the "Boot now!" button
 * Alternatively: `tftp -m binary xxx.xxx.xxx.xxx -c put kernel.img`
 
+## Notes
+
+* Only the kernel will be loaded over the network, not any other files such as `.ini` files or `.syx` files
+* Some other [limitations](https://github.com/rsta2/circle/tree/master/sample/38-bootloader) apply
+
 ## Credits
 
 https://github.com/rsta2/
