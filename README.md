@@ -1,6 +1,6 @@
 # CircleNetboot
 
-Builds of https://github.com/rsta2/circle/tree/master/sample/38-bootloader. This can be useful to test and debug builds of [Circle](https://github.com/rsta2/circle/) based firmware such as 8MiniDexed](https://github.com/probonopd/MiniDexed/).
+Builds of https://github.com/rsta2/circle/tree/master/sample/38-bootloader. This can be useful to test and debug builds of [Circle](https://github.com/rsta2/circle/) based firmware such as [MiniDexed](https://github.com/probonopd/MiniDexed/) during the development cycle without the need for swapping SD cards.
 
 ## Usage
 
